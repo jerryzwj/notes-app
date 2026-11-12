@@ -50,6 +50,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
@@ -375,8 +376,8 @@ private fun NoteRow(vm: NotesViewModel, meta: NoteMeta) {
             .padding(horizontal = 10.dp, vertical = 4.dp)
             .background(Panel, RoundedCornerShape(14.dp))
             .clickable { vm.open(meta.id) }
-            .padding(start = 14.dp, end = 2.dp, top = 11.dp, bottom = 11.dp),
-        verticalAlignment = Alignment.Top
+            .padding(start = 14.dp, end = 10.dp, top = 11.dp, bottom = 11.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Column(Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -415,8 +416,19 @@ private fun NoteRow(vm: NotesViewModel, meta: NoteMeta) {
             }
         }
         Box {
-            IconButton(onClick = { menu = true }, modifier = Modifier.size(34.dp)) {
-                Icon(Icons.Rounded.MoreVert, contentDescription = "更多", tint = Muted, modifier = Modifier.size(18.dp))
+            Box(
+                modifier = Modifier
+                    .size(34.dp)
+                    .clip(RoundedCornerShape(50.dp))
+                    .clickable { menu = true },
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    Icons.Rounded.MoreVert,
+                    contentDescription = "更多",
+                    tint = Muted,
+                    modifier = Modifier.size(18.dp)
+                )
             }
             DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
                 if (meta.deleted) {
