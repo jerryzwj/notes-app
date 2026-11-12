@@ -1,4 +1,4 @@
-const VERSION = 'notes-v30';
+const VERSION = 'notes-v31';
 const SHELL = ['/', '/index.html', '/style.css', '/markdown.js', '/native.js', '/app.js', '/share.html', '/manifest.webmanifest', '/icon-192.png', '/icon-512.png'];
 
 self.addEventListener('install', (event) => {

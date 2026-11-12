@@ -11,8 +11,8 @@ android {
         applicationId = "eu.wenjun.notes"
         minSdk = 24
         targetSdk = 34
-        versionCode = 12
-        versionName = "3.0-native"
+        versionCode = 13
+        versionName = "3.1-native"
     }
 
     buildTypes {

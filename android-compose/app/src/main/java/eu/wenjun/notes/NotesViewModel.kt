@@ -84,12 +84,12 @@ class NotesViewModel(context: Application) : AndroidViewModel(context) {
                 runAutoBackup()
             }
         }
-        // 每天最多查一次 GitHub Release，有新版只写进菜单提示，不打扰
-        if (Update.shouldCheck(context)) {
-            viewModelScope.launch {
-                delay(2500)
-                updateInfo = withContext(Dispatchers.IO) { Update.check(app) }
-            }
+        // 每次启动都查一次 GitHub Release，发现新版直接弹对话框提醒更新
+        viewModelScope.launch {
+            delay(1200)
+            val info = withContext(Dispatchers.IO) { Update.check(app) }
+            updateInfo = info
+            if (info.available) updateDialog = info
         }
     }
 

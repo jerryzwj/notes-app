@@ -1,0 +1,28 @@
+
+ ⛅️ wrangler 4.61.0 (update available 4.160.1)
+──────────────────────────────────────────────
+🌀 Building list of assets...
+✨ Read 12 files from the assets directory D:\code\notes-app\public
+🌀 Starting asset upload...
+🌀 Found 5 new or modified static assets to upload. Proceeding with upload...
++ /mark.svg
++ /icon-maskable-512.png
++ /sw.js
++ /icon-512.png
++ /icon-192.png
+Uploaded 1 of 5 assets
+Uploaded 3 of 5 assets
+Uploaded 5 of 5 assets
+✨ Success! Uploaded 5 files (7 already uploaded) (2.44 sec)
+
+Total Upload: 19.61 KiB / gzip: 6.01 KiB
+Worker Startup Time: 3 ms
+Your Worker has access to the following bindings:
+Binding                                                         Resource                  
+env.ASSETS                                                      Assets                    
+env.UPSTASH_URL ("https://finer-jackal-246338.upstash.io")      Environment Variable      
+
+Uploaded notes (5.98 sec)
+Deployed notes triggers (2.86 sec)
+  note.wenjun.eu.org (custom domain)
+Current Version ID: 24392941-ab3e-4a2c-b368-d455dec530b6
