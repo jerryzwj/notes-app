@@ -260,7 +260,7 @@ private fun ListHeader(vm: NotesViewModel) {
                     modifier = Modifier.size(18.dp)
                 )
             }
-            DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
+            NotesDropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
                 DropdownMenuItem(text = { Text("刷新", color = Ink) }, onClick = {
                     menu = false
                     vm.refresh()
@@ -430,7 +430,7 @@ private fun NoteRow(vm: NotesViewModel, meta: NoteMeta) {
                     modifier = Modifier.size(18.dp)
                 )
             }
-            DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
+            NotesDropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
                 if (meta.deleted) {
                     DropdownMenuItem(text = { Text("恢复", color = Ink) }, onClick = {
                         menu = false

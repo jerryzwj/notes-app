@@ -200,7 +200,7 @@ fun EditorScreen(vm: NotesViewModel) {
                         modifier = Modifier.size(18.dp)
                     )
                 }
-                DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
+                NotesDropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
                     DropdownMenuItem(text = { Text(if (pinned) "取消置顶" else "置顶", color = Ink) }, onClick = {
                         menu = false
                         vm.setPinned(!pinned)

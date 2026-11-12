@@ -4,6 +4,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,8 +56,8 @@ val AccentInk: Color get() = if (Look.dark) Color(0xFF06211A) else Color(0xFFFFF
 val AccentSoft: Color get() = if (Look.dark) Color(0x2E45D6A6) else Color(0x1F0E9E74)
 
 @Composable
-fun NotesTheme(content: @Composable () -> Unit) {
-    val colors = if (Look.dark) {
+private fun notesColorScheme(): ColorScheme =
+    if (Look.dark) {
         darkColorScheme(
             primary = Accent,
             onPrimary = AccentInk,
@@ -67,7 +68,14 @@ fun NotesTheme(content: @Composable () -> Unit) {
             surfaceVariant = Panel2,
             onSurfaceVariant = Ink2,
             outline = Line,
-            error = Danger
+            error = Danger,
+            // M3 的菜单/弹层容器色来自 surfaceContainer 系列，这里显式给值，
+            // 免得深色模式下菜单还是浅色皮肤（白底白字像白屏）
+            surfaceContainerLowest = Panel,
+            surfaceContainerLow = Panel,
+            surfaceContainer = Panel2,
+            surfaceContainerHigh = Panel2,
+            surfaceContainerHighest = Panel2
         )
     } else {
         lightColorScheme(
@@ -80,8 +88,41 @@ fun NotesTheme(content: @Composable () -> Unit) {
             surfaceVariant = Panel2,
             onSurfaceVariant = Ink2,
             outline = Line,
-            error = Danger
+            error = Danger,
+            surfaceContainerLowest = Panel,
+            surfaceContainerLow = Panel,
+            surfaceContainer = Panel2,
+            surfaceContainerHigh = Panel2,
+            surfaceContainerHighest = Panel2
         )
     }
-    MaterialTheme(colorScheme = colors, typography = Typography(), content = content)
+
+/**
+ * 菜单/弹层专用：Popup 是独立的一次性合成，MaterialTheme 变化有时传不进去，
+ * 这里在弹层自己的作用域里重新给一遍当前配色，保证深色模式下不会出现白底白字。
+ */
+@Composable
+fun NotesMenuTheme(content: @Composable () -> Unit) {
+    MaterialTheme(colorScheme = notesColorScheme(), typography = Typography(), content = content)
+}
+
+/** 统一外观的下拉菜单：容器色跟着当前主题走，深色模式不会白底白字。 */
+@Composable
+fun NotesDropdownMenu(
+    expanded: Boolean,
+    onDismissRequest: () -> Unit,
+    content: @Composable androidx.compose.foundation.layout.ColumnScope.() -> Unit
+) {
+    NotesMenuTheme {
+        androidx.compose.material3.DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = onDismissRequest,
+            content = content
+        )
+    }
+}
+
+@Composable
+fun NotesTheme(content: @Composable () -> Unit) {
+    MaterialTheme(colorScheme = notesColorScheme(), typography = Typography(), content = content)
 }

@@ -26,14 +26,20 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.activity.viewModels
 import kotlinx.coroutines.delay
 
 private enum class Screen { LOGIN, EDITOR, BACKUP, LIST }
 
 class MainActivity : ComponentActivity() {
+    // 提前创建 VM：它会把 notes-look 里的外观偏好读进 Look.dark，
+    // 保证第一帧 MaterialTheme 就是深色/浅色正确的那套（否则首次打开深色模式
+    // 时 M3 的菜单、弹窗还是浅色皮肤，白底白字像白屏）。
+    private val model: NotesViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val vm = model
         setContent {
             NotesTheme {
                 // 状态栏 / 导航栏跟着当前外观走，浅色亮底用深色图标，深色亮字
@@ -46,7 +52,6 @@ class MainActivity : ComponentActivity() {
                     controller.isAppearanceLightStatusBars = !Look.dark
                     controller.isAppearanceLightNavigationBars = !Look.dark
                 }
-                val vm: NotesViewModel = viewModel()
                 Box(Modifier.fillMaxSize().background(Bg)) {
                     val screen = when {
                         vm.token == null -> Screen.LOGIN
