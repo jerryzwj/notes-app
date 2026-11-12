@@ -418,11 +418,15 @@ a:focus-visible {
 }
 
 .sync {
+  display: inline-flex;
+  align-items: center;
+  height: 34px;
+  padding: 0 12px;
   font-size: 12px;
   color: var(--muted);
-  padding: 4px 10px;
   border-radius: 999px;
   border: 1px solid transparent;
+  background: var(--panel-2);
   white-space: nowrap;
   transition: color 0.15s var(--ease), background 0.15s var(--ease);
 }
@@ -435,8 +439,8 @@ a:focus-visible {
 .sync[data-state="offline"],
 .sync[data-state="pending"] {
   color: var(--danger);
-  background: transparent;
-  border-color: var(--line);
+  background: rgba(192, 57, 43, 0.1);
+  border-color: transparent;
 }
 
 .btn.primary {
@@ -477,12 +481,13 @@ a:focus-visible {
   place-items: center;
   border-radius: 999px;
   color: var(--ink-2);
+  background: var(--panel-2);
   transition: background 0.15s var(--ease), color 0.15s var(--ease);
 }
 
 .icon-btn:hover {
-  background: var(--panel-2);
-  color: var(--ink);
+  background: var(--accent-soft);
+  color: var(--accent);
 }
 
 .icon-btn svg {
