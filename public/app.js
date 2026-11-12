@@ -515,9 +515,111 @@
     return window.renderMarkdown ? window.renderMarkdown(src) : '';
   }
 
-  // 按 state.preview 把编辑区切到「预览」或「编辑」形态
-  function applyMode() {
+  // ===== 预览里点正文：把点击位置尽量映射回 Markdown 源码下标 =====
+  const BLOCK_TAGS = new Set([
+    'P', 'DIV', 'LI', 'UL', 'OL', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6',
+    'BLOCKQUOTE', 'PRE', 'TABLE', 'TBODY', 'TR', 'TD', 'TH', 'FIGURE', 'FIGCAPTION', 'HR', 'SECTION'
+  ]);
+
+  // 把预览 DOM 压成「纯文本 + 每个文本节点的起始下标」
+  function previewTextMap(root) {
+    let text = '';
+    const starts = new Map();
+    const walk = (node) => {
+      if (node.nodeType === 3) {
+        starts.set(node, text.length);
+        text += node.nodeValue;
+        return;
+      }
+      if (node.nodeType !== 1) return;
+      const el = node;
+      if (el.tagName === 'BR') {
+        text += '\n';
+        return;
+      }
+      const block = BLOCK_TAGS.has(el.tagName);
+      if (block && text && !text.endsWith('\n')) text += '\n';
+      el.childNodes.forEach(walk);
+      if (block && !text.endsWith('\n')) text += '\n';
+    };
+    walk(root);
+    return { text, starts };
+  }
+
+  function caretNodeAtPoint(x, y) {
+    let node = null;
+    let off = 0;
+    if (document.caretRangeFromPoint) {
+      const r = document.caretRangeFromPoint(x, y);
+      if (r) {
+        node = r.startContainer;
+        off = r.startOffset;
+      }
+    } else if (document.caretPositionFromPoint) {
+      const p = document.caretPositionFromPoint(x, y);
+      if (p) {
+        node = p.offsetNode;
+        off = p.offset;
+      }
+    }
+    return node ? { node, off } : null;
+  }
+
+  function previewCaretToSource(x, y) {
     const note = currentNote();
+    if (!note) return -1;
+    const hit = caretNodeAtPoint(x, y);
+    if (!hit) return -1;
+    let caretNode = hit.node;
+    let caretOff = hit.off;
+    if (caretNode.nodeType !== 3) {
+      const tw = document.createTreeWalker(caretNode, NodeFilter.SHOW_TEXT);
+      const first = tw.nextNode();
+      if (!first) return -1;
+      caretNode = first;
+      caretOff = 0;
+    }
+    const { text, starts } = previewTextMap($('#preview'));
+    const base = starts.get(caretNode);
+    if (base === undefined) return -1;
+    const plainIdx = base + caretOff;
+    const src = note.body || '';
+    // 以点击处所在的那个词为锚点（带少量左侧上下文），源码里的 ** / ` 等标记会打断匹配，逐级收窄
+    for (const maxLen of [24, 10, 5]) {
+      let s = plainIdx;
+      while (s < text.length && /\s/.test(text[s])) s++;
+      let back = s;
+      while (back > 0 && !/\s/.test(text[back - 1]) && s - back < 5) back--;
+      let e = s;
+      while (e < text.length && !/\s/.test(text[e]) && e - s < maxLen) e++;
+      const snip = text.slice(back, e);
+      if (snip.length < 3) continue;
+      const off = s - back;
+      let idx = src.indexOf(snip, Math.max(0, plainIdx - 200 - off));
+      if (idx < 0) idx = src.indexOf(snip);
+      if (idx >= 0) return idx + off;
+    }
+    return Math.min(src.length, Math.max(0, plainIdx));
+  }
+
+  // 退出预览并把光标放到指定下标（含滚动到视野内）
+  function exitPreviewAt(pos) {
+    const note = currentNote();
+    if (!note) return;
+    state.preview = false;
+    const el = $('#noteBody');
+    el.value = note.body || '';
+    applyMode();
+    el.focus();
+    const p = Math.max(0, Math.min(el.value.length, pos));
+    el.setSelectionRange(p, p);
+    const lh = parseFloat(getComputedStyle(el).lineHeight) || 22;
+    const lines = el.value.slice(0, p).split('\n').length - 1;
+    el.scrollTop = Math.max(0, lines * lh - el.clientHeight / 2);
+  }
+
+  // 按 state.preview 把编辑区切到「预览」或「编辑」形态
+  function applyMode() {    const note = currentNote();
     const body = $('#noteBody');
     const preview = $('#preview');
     const btn = $('#modeBtn');
@@ -1226,10 +1328,17 @@
       insertMarkdown(btn.dataset.md);
     });
 
-    // 预览里点正文就直接回到编辑；点链接不打断
+    // 预览里点正文：回到编辑并把光标落在点击处；点链接不打断
     $('#preview').addEventListener('click', (e) => {
       if (e.target.closest('a')) return;
-      if (state.preview) togglePreview();
+      if (!state.preview) return;
+      if (state.bodyMissing) {
+        togglePreview();
+        return;
+      }
+      const note = currentNote();
+      const pos = previewCaretToSource(e.clientX, e.clientY);
+      exitPreviewAt(pos >= 0 ? pos : (note ? (note.body || '').length : 0));
     });
 
     $('#pinBtn').addEventListener('click', () => {
