@@ -1,6 +1,6 @@
 """记事本品牌图标生成脚本。
 
-设计：琥珀渐变圆角底 + 白色纸页（右上折角）+ 石墨色文字线。
+设计：翠绿渐变圆角底 + 白色纸页（右上折角）+ 石墨色文字线。
 输出：
   public/icon-512.png / icon-192.png / icon-maskable-512.png
   android mipmap-*/ic_launcher(.round|_foreground).png
@@ -14,27 +14,28 @@ from PIL import Image, ImageDraw, ImageFilter
 ROOT = Path(__file__).resolve().parent.parent
 PUBLIC = ROOT / "public"
 RES = ROOT / "android-app" / "android" / "app" / "src" / "main" / "res"
+COMPOSE_RES = ROOT / "android-compose" / "app" / "src" / "main" / "res"
 
 S = 4  # 超采样倍数：先按 1024 * S 画，再缩放
 
-AMBER_TOP = (240, 180, 92)
-AMBER_BOTTOM = (204, 138, 44)
+EMERALD_TOP = (72, 214, 164)
+EMERALD_BOTTOM = (10, 138, 100)
 PAGE = (255, 255, 255)
 FOLD = (214, 214, 222)
 INK = (38, 38, 42)
-SHADOW = (60, 36, 10)
+SHADOW = (6, 46, 34)
 
 
 def _gradient(size: int) -> Image.Image:
     """左上偏亮、右下偏深的线性渐变。"""
-    img = Image.new("RGB", (size, size), AMBER_BOTTOM)
+    img = Image.new("RGB", (size, size), EMERALD_BOTTOM)
     d = ImageDraw.Draw(img)
     for i in range(size):
         t = i / max(1, size - 1)
         # 轻微的非线性，让亮部集中在左上
         e = t ** 0.92
         col = tuple(
-            int(AMBER_TOP[c] + (AMBER_BOTTOM[c] - AMBER_TOP[c]) * e) for c in range(3)
+            int(EMERALD_TOP[c] + (EMERALD_BOTTOM[c] - EMERALD_TOP[c]) * e) for c in range(3)
         )
         d.line([(0, i), (size, i)], fill=col)
     overlay = Image.new("L", (size, size), 0)
@@ -184,6 +185,16 @@ def main():
         w, h = old.size
         splash(w, h).save(p, "PNG", optimize=True)
         print(f"{p.relative_to(ROOT)}  {w}x{h}")
+
+    # 原生 Compose 端：只出 mipmap 三件套，冷启动窗口用矢量 splash_window.xml
+    for name, px in densities.items():
+        save_icon(COMPOSE_RES / f"mipmap-{name}" / "ic_launcher.png", px)
+        img = icon(px * S).resize((px, px), Image.LANCZOS)
+        round_mask = Image.new("L", (px, px), 0)
+        ImageDraw.Draw(round_mask).ellipse([0, 0, px - 1, px - 1], fill=255)
+        img.putalpha(round_mask)
+        img.save(COMPOSE_RES / f"mipmap-{name}" / "ic_launcher_round.png", "PNG", optimize=True)
+        save_glyph(COMPOSE_RES / f"mipmap-{name}" / "ic_launcher_foreground.png", int(px * 2.25))
 
 
 if __name__ == "__main__":

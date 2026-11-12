@@ -17,11 +17,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.delay
 
@@ -32,6 +36,16 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             NotesTheme {
+                // 状态栏 / 导航栏跟着当前外观走，浅色亮底用深色图标，深色亮字
+                val view = LocalView.current
+                SideEffect {
+                    val window = this@MainActivity.window
+                    window.statusBarColor = Bg.toArgb()
+                    window.navigationBarColor = Bg.toArgb()
+                    val controller = WindowCompat.getInsetsController(window, view)
+                    controller.isAppearanceLightStatusBars = !Look.dark
+                    controller.isAppearanceLightNavigationBars = !Look.dark
+                }
                 val vm: NotesViewModel = viewModel()
                 Box(Modifier.fillMaxSize().background(Bg)) {
                     val screen = when {
@@ -74,11 +88,11 @@ private fun ToastHost(vm: NotesViewModel) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
             Text(
                 text = message,
-                color = Color(0xFF1A1409),
+                color = AccentInk,
                 fontSize = 12.5.sp,
                 modifier = Modifier
                     .padding(bottom = 64.dp, start = 24.dp, end = 24.dp)
-                    .background(Amber, RoundedCornerShape(8.dp))
+                    .background(Accent, RoundedCornerShape(8.dp))
                     .padding(horizontal = 14.dp, vertical = 9.dp)
             )
         }

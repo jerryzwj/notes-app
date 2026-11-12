@@ -75,7 +75,7 @@ fun LoginScreen(vm: NotesViewModel) {
                 onValueChange = { password = it },
                 singleLine = true,
                 textStyle = TextStyle(color = Ink, fontSize = 16.sp),
-                cursorBrush = SolidColor(Amber),
+                cursorBrush = SolidColor(Accent),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Done
@@ -100,8 +100,8 @@ fun LoginScreen(vm: NotesViewModel) {
             enabled = !vm.loading,
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Amber,
-                contentColor = Color(0xFF1A1409),
+                containerColor = Accent,
+                contentColor = AccentInk,
                 disabledContainerColor = Panel2,
                 disabledContentColor = Muted
             ),

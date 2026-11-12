@@ -48,9 +48,15 @@ class NotesViewModel(context: Application) : AndroidViewModel(context) {
     var updateInfo by mutableStateOf<Update.Info?>(null); private set
     var updateDialog by mutableStateOf<Update.Info?>(null); private set
     var updateChecking by mutableStateOf(false); private set
+    /** 外观：false 浅色（默认）/ true 深色，存 notes-look 偏好文件。 */
+    var darkLook by mutableStateOf(Look.dark); private set
+    private val lookPrefs = context.getSharedPreferences("notes-look", android.content.Context.MODE_PRIVATE)
     private var autoBackupJob: Job? = null
 
     init {
+        // 先摆上次选的外观，避免冷启动先闪一下另一套配色
+        Look.dark = lookPrefs.getBoolean("dark", false)
+        darkLook = Look.dark
         // 一条线路连不上时自动换另一条，并提示一次
         api.onHostChanged = { switched ->
             viewModelScope.launch(Dispatchers.Main.immediate) {
@@ -110,6 +116,14 @@ class NotesViewModel(context: Application) : AndroidViewModel(context) {
 
     fun dismissUpdate() {
         updateDialog = null
+    }
+
+    /** 切浅色 / 深色，立即生效并记住选择。 */
+    fun toggleLook() {
+        Look.dark = !Look.dark
+        darkLook = Look.dark
+        lookPrefs.edit().putBoolean("dark", Look.dark).apply()
+        toast = if (Look.dark) "已切到深色" else "已切到浅色"
     }
 
     /** 手动测速：两条线路各打一个静态清单文件，取快的；界面里能从菜单点。 */

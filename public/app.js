@@ -797,7 +797,7 @@
     const pref = mode === 'auto' ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : mode;
     document.documentElement.dataset.theme = pref;
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.content = pref === 'dark' ? '#161618' : '#f6f6f5';
+    if (meta) meta.content = pref === 'dark' ? '#111614' : '#f6f8f5';
   }
 
   function toggleTheme() {
@@ -1393,7 +1393,7 @@
       }
     }
 
-    applyTheme(localStorage.getItem(KEY.theme) || 'dark');
+    applyTheme(localStorage.getItem(KEY.theme) || 'light');
     cacheLoad();
     renderAll();
     bind();

@@ -132,13 +132,13 @@ fun BackupScreen(vm: NotesViewModel) {
                 )
                 Text(
                     text = if (vm.backupBusy) "备份中…" else "立即备份",
-                    color = if (vm.backupBusy) Muted else Color(0xFF1A1409),
+                    color = if (vm.backupBusy) Muted else AccentInk,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier
                         .weight(1f)
                         .background(
-                            if (vm.backupBusy) Panel2 else Amber,
+                            if (vm.backupBusy) Panel2 else Accent,
                             RoundedCornerShape(8.dp)
                         )
                         .clickable {
@@ -155,7 +155,7 @@ fun BackupScreen(vm: NotesViewModel) {
                 if (vm.backupBusy) {
                     CircularProgressIndicator(
                         modifier = Modifier.height(13.dp).width(13.dp),
-                        color = Amber,
+                        color = Accent,
                         strokeWidth = 2.dp
                     )
                     Spacer(Modifier.width(8.dp))
@@ -163,7 +163,7 @@ fun BackupScreen(vm: NotesViewModel) {
                 Text(
                     text = vm.backupStatus ?: "还没有备份过",
                     fontSize = 12.sp,
-                    color = if (vm.backupStatus?.startsWith("上次备份") == true) Amber else Muted
+                    color = if (vm.backupStatus?.startsWith("上次备份") == true) Accent else Muted
                 )
             }
 
@@ -208,7 +208,7 @@ private fun Field(
                 onValueChange = onValueChange,
                 singleLine = true,
                 textStyle = TextStyle(color = Ink, fontSize = 14.sp),
-                cursorBrush = SolidColor(Amber),
+                cursorBrush = SolidColor(Accent),
                 visualTransformation = if (password) PasswordVisualTransformation() else VisualTransformation.None,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = if (password) KeyboardType.Password else KeyboardType.Uri,

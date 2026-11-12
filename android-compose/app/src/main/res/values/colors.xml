@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="bg">#1C1C1E</color>
-    <color name="panel">#161618</color>
-    <color name="accent">#E0A94A</color>
+    <!-- 启动窗口用的底色：与 Compose 浅色主题的 Bg 一致，避免冷启动先闪一下深色 -->
+    <color name="bg">#F6F8F5</color>
+    <color name="panel">#FFFFFF</color>
+    <color name="accent">#0E9E74</color>
 </resources>

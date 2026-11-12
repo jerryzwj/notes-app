@@ -90,7 +90,7 @@ fun ListScreen(vm: NotesViewModel) {
         SearchBox(vm)
         TabsRow(vm)
         if (vm.opening) {
-            Box(Modifier.fillMaxWidth().height(2.dp).background(Amber))
+            Box(Modifier.fillMaxWidth().height(2.dp).background(Accent))
         } else {
             Line()
         }
@@ -183,7 +183,7 @@ private fun UpdateDialog(vm: NotesViewModel, info: Update.Info) {
                     context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(info.url)))
                 }.onFailure { vm.toast = "没有能打开链接的浏览器" }
             }) {
-                Text("下载更新", color = Amber)
+                Text("下载更新", color = Accent)
             }
         },
         dismissButton = {
@@ -214,11 +214,11 @@ private fun ListHeader(vm: NotesViewModel) {
         Box(
             modifier = Modifier
                 .size(34.dp)
-                .background(Amber, RoundedCornerShape(8.dp))
+                .background(Accent, RoundedCornerShape(8.dp))
                 .clickable { vm.createNote() },
             contentAlignment = Alignment.Center
         ) {
-            Icon(Icons.Rounded.Add, contentDescription = "新建", tint = Color(0xFF1A1409), modifier = Modifier.size(20.dp))
+            Icon(Icons.Rounded.Add, contentDescription = "新建", tint = AccentInk, modifier = Modifier.size(20.dp))
         }
         Box {
             IconButton(onClick = { menu = true }) {
@@ -255,7 +255,7 @@ private fun ListHeader(vm: NotesViewModel) {
                                     vm.updateInfo?.available == true -> "有新版本 v${vm.updateInfo?.version}"
                                     else -> "v${BuildConfig.VERSION_NAME}"
                                 },
-                                color = if (vm.updateInfo?.available == true) Amber else Muted,
+                                color = if (vm.updateInfo?.available == true) Accent else Muted,
                                 fontSize = 11.sp
                             )
                         }
@@ -263,6 +263,18 @@ private fun ListHeader(vm: NotesViewModel) {
                     onClick = {
                         menu = false
                         vm.checkUpdate()
+                    }
+                )
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            if (vm.darkLook) "外观：深色（点一下切浅色）" else "外观：浅色（点一下切深色）",
+                            color = Ink
+                        )
+                    },
+                    onClick = {
+                        menu = false
+                        vm.toggleLook()
                     }
                 )
                 DropdownMenuItem(text = { Text("退出登录", color = Danger) }, onClick = {
@@ -292,7 +304,7 @@ private fun SearchBox(vm: NotesViewModel) {
             onValueChange = { vm.updateQuery(it) },
             singleLine = true,
             textStyle = TextStyle(color = Ink, fontSize = 14.sp),
-            cursorBrush = SolidColor(Amber),
+            cursorBrush = SolidColor(Accent),
             modifier = Modifier.weight(1f),
             decorationBox = { inner ->
                 if (vm.query.isEmpty()) Text("搜索标题、正文、标签…", color = Muted, fontSize = 14.sp)
@@ -327,7 +339,7 @@ private fun TabsRow(vm: NotesViewModel) {
                     Modifier
                         .height(2.dp)
                         .width(18.dp)
-                        .background(if (selected) Amber else Color.Transparent, RoundedCornerShape(1.dp))
+                        .background(if (selected) Accent else Color.Transparent, RoundedCornerShape(1.dp))
                 )
             }
         }
@@ -349,7 +361,7 @@ private fun NoteRow(vm: NotesViewModel, meta: NoteMeta) {
         Column(Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (meta.pinned) {
-                    Text("置顶", fontSize = 10.sp, color = Amber, modifier = Modifier.padding(end = 6.dp))
+                    Text("置顶", fontSize = 10.sp, color = Accent, modifier = Modifier.padding(end = 6.dp))
                 }
                 Text(
                     text = meta.title.ifBlank { "无标题" },
@@ -378,7 +390,7 @@ private fun NoteRow(vm: NotesViewModel, meta: NoteMeta) {
             ) {
                 Text(formatTime(meta.updatedAt), fontSize = 11.5.sp, color = Muted)
                 meta.tags.take(3).forEach { tag ->
-                    Text("#$tag", fontSize = 11.5.sp, color = Amber)
+                    Text("#$tag", fontSize = 11.5.sp, color = Accent)
                 }
             }
         }
@@ -433,7 +445,7 @@ private fun LoadingPlaceholder() {
         ) {
             CircularProgressIndicator(
                 modifier = Modifier.size(14.dp),
-                color = Amber,
+                color = Accent,
                 strokeWidth = 2.dp
             )
             Spacer(Modifier.width(8.dp))
@@ -544,17 +556,17 @@ private fun PullToRefreshBox(
                     refreshing -> {
                         CircularProgressIndicator(
                             modifier = Modifier.size(13.dp),
-                            color = Amber,
+                            color = Accent,
                             strokeWidth = 2.dp
                         )
                         Spacer(Modifier.width(7.dp))
                         Text("正在刷新…", fontSize = 12.sp, color = Muted)
                     }
-                    showDone -> Text("已刷新", fontSize = 12.sp, color = Amber)
+                    showDone -> Text("已刷新", fontSize = 12.sp, color = Accent)
                     else -> Text(
                         text = if (pull >= thresholdPx) "松开刷新" else "下拉刷新",
                         fontSize = 12.sp,
-                        color = if (pull >= thresholdPx) Amber else Muted
+                        color = if (pull >= thresholdPx) Accent else Muted
                     )
                 }
             }

@@ -19,7 +19,7 @@
 - 回收站、导出全部笔记为 JSON、把 JSON 导入回来（合并式，同 id 按更新时间取新的）
 - 回收站里超过 30 天的笔记自动清掉（挂在列表请求上，最多每 6 小时跑一次，不需要 cron）
 - 列表只拉标题和摘要，点开某条才拉正文；搜索走服务端全文（标题 + 正文 + 标签）
-- 深色主题为默认（中性石墨底 + 琥珀强调，无衬线标题）；右上角太阳图标可切到浅色，偏好记在本地
+- 浅色为默认（米白纸底 + 白卡片 + 翠绿 `#0e9e74` 强调，圆角 12/18px、柔和投影）；右上角太阳图标切到深色（深墨绿石墨底 `#111614` + 亮翠绿 `#45d6a6`），偏好存 `nn.theme`
 - 手机窄屏自适应：列表与编辑区单页切换
 
 ## 结构
@@ -36,7 +36,7 @@ notes-app/
 │  ├─ share.html            # 公开只读分享页（/s/<slug> 复用它）
 │  ├─ manifest.webmanifest  # PWA 清单
 │  ├─ sw.js                 # Service Worker（静态资源缓存）
-│  ├─ mark.svg              # 品牌标识（琥珀圆角底 + 白色纸页），顶栏与分享页共用
+│  ├─ mark.svg              # 品牌标识（翠绿渐变圆角底 + 白色纸页），顶栏与分享页共用
 │  └─ icon-*.png            # 应用图标（192 / 512 / maskable）
 ├─ android-compose/         # 安卓原生客户端（Kotlin + Jetpack Compose，当前主用）
 ├─ android-app/             # 旧 Capacitor 壳（已弃用，保留未删）
@@ -220,7 +220,7 @@ python scripts\maintenance.py clear --yes # 清空（慎用）
 
 WebView 壳的界面观感一直不满意，所以安卓端改成纯原生重写：后端还是同一个 Cloudflare Worker，接口和数据一个字没动，App 只是换了一个直连 HTTP API 的客户端。
 
-- 工程：`android-compose/`，包名 `eu.wenjun.notes`（与旧壳一致，可直接覆盖安装），`versionCode 3` / `versionName 2.1-native`
+- 工程：`android-compose/`，包名 `eu.wenjun.notes`（与旧壳一致，可直接覆盖安装），`versionCode 4` / `versionName 2.2-native`
 - 技术栈：Kotlin 1.9.22 + Compose Compiler 1.5.8 + AGP 8.2.1 / Gradle 8.2.1 + Compose BOM 2024.02.00 + Material3 + OkHttp 4.12 + org.json，`minSdk 24` / `targetSdk 34` / `compileSdk 34`
 - 没有 Retrofit、Moshi、Navigation：一个 OkHttp 封装 + 一个 `AndroidViewModel` + `openNote` 状态切换列表和详情，依赖少、编译快
 - 主题直接继承 `android:Theme.Material.NoActionBar`，不建 `values-night` 变体（避免 `ResourceCycle` 自继承问题）；输入框统一用 `BasicTextField`（material3 1.2.0 的 `OutlinedTextField` 没有 `contentPadding`）
@@ -237,7 +237,7 @@ WebView 壳的界面观感一直不满意，所以安卓端改成纯原生重写
 | `WebDav.kt` | 极简 WebDAV 客户端（OkHttp）：`MKCOL` 建目录、`PUT` 写文件、`GET` 读文件，Basic 认证，中文路径逐段 URL 编码；配置存 `webdav-config` 偏好文件 |
 | `Backup.kt` | 把每篇笔记渲染成可读 Markdown（标题 / 标签 / 更新时间 / 笔记 ID + 正文），写到 WebDAV 的「记事本备份/」目录，另写 `_备份记录.md`；`lastRecord()` 读回上次备份时间与篇数 |
 | `Session.kt` | 令牌存应用私有 SharedPreferences（`notes-session`），退出登录即清 |
-| `Theme.kt` | v2 设计令牌（`#1C1C1E` 底 / `#161618` 面板 / `#26262A` 浮层 / `#E0A94A` 琥珀 / `#38383E` 分割线） |
+| `Theme.kt` | 设计令牌：`Look.dark` 开关 + 两套色值（浅色 `#F6F8F5` 底 / `#FFFFFF` 面板 / `#0E9E74` 翠绿；深色 `#111614` 底 / `#161C19` 面板 / `#45D6A6` 亮翠绿），`Bg`/`Panel`/`Ink`/`Accent` 等按当前外观取值，切主题所有界面自动跟着变 |
 | `Markdown.kt` | 轻量 Markdown：标题、正文、代码块、引用、列表、待办、分割线，行内加粗/斜体/行内代码/链接/删除线 |
 | `NotesViewModel.kt` | 令牌、列表、tab、搜索词、打开中的笔记、保存状态、toast；401 自动清令牌回登录页；列表里改置顶会先 GET 全文再 PUT，避免把正文清空；新建走「本地空白稿 + 首次保存时 PUT 建笔记」，不阻塞界面 |
 | `NoteCache.kt` | 全文缓存 + 列表缓存（同一份 `notes-cache` 偏好文件）：单篇正文最多 40 条，列表摘要一份；列表加载完还会预取最近 12 篇，点开时时间戳一致就直接用缓存 |
@@ -257,7 +257,8 @@ WebView 壳的界面观感一直不满意，所以安卓端改成纯原生重写
 - 缓存只在 `updatedAt` 与列表元信息一致时生效，别处改过的笔记不会被旧缓存冒充；删除 / 退出登录会清掉对应缓存
 - 新建不再等云端：点「+」直接在本地开一张空白稿、立刻进编辑页，第一次自动保存的 PUT 会按 id 把笔记建到后端；什么都没写就返回，云端不会多出空笔记
 - 下拉刷新：列表拉到底再往下拖，顶部露出「下拉刷新 / 松开刷新」，松手过 64dp 阈值就重新拉列表；松手后顶部换成「正在刷新…」提示条一直挂到数据回来，随后显示 0.7 秒「已刷新」再收起。右上角 ⋯ 菜单里的「刷新」也保留
-- 冷启动不空屏：上次的列表摘要在本地存一份，重开 App 立刻摆出来，同时在后台拉最新；本地还没缓存时显示「正在同步云端笔记…」+ 骨架条，不再是空白。启动窗口背景也换成深色 + 居中标识，点开图标不会先闪一下
+- 冷启动不空屏：上次的列表摘要在本地存一份，重开 App 立刻摆出来，同时在后台拉最新；本地还没缓存时显示「正在同步云端笔记…」+ 骨架条，不再是空白。启动窗口背景跟当前浅色主题同色（`#F6F8F5`）+ 居中标识，点开图标不会先闪一下
+- 外观开关：默认浅色（米白底 + 白卡片 + 翠绿强调），⋯ 菜单里「外观：浅色/深色」点一下整 App 立即换色（列表、编辑、备份、登录全跟着变），选择存 `notes-look` 偏好文件；状态栏 / 导航栏图标颜色也跟着深浅切换
 - 预览态的文字可以长按选中、拖选择柄复制；编辑页 ⋯ 里另有「复制全文」一键拷标题 + 正文
 - 双域名优选：`note.wenjun.eu.org` 和 `note.zhangwenjun.eu.org` 指向同一个 Worker，App 冷启动（距上次测速超过 6 小时）会各自打一个静态清单文件、取延迟低的那条；请求遇上 DNS/建连/超时这类 IO 错误会自动换另一条域名重试一次并记住，界面上弹一句「这条线路没连上，已切到 xxx」。⋯ 菜单里能直接看到当前走的域名，点一下立刻重新测速
 - 检查更新：⋯ 菜单里「检查更新」下面小字写着当前版本，点一下查 GitHub Release；有新版本弹对话框显示更新说明和「下载更新」（直接打开 APK 资产地址），没有就提示「已是最新版本」。App 每天最多自动查一次，有新版只在菜单里标一句「有新版本 vX」，不弹窗打扰。仓库/版本都没发布时只提示「还没有发布记录」，不报错
@@ -302,7 +303,7 @@ App 查的是 `https://api.github.com/repos/jerryzwj/notes-app/releases/latest`�
 
 ### 真机验证情况
 
-本机没有连安卓设备也没有装模拟器，APK 只做了编译和静态校验：`aapt2` 确认包名 `eu.wenjun.notes`、`versionCode 3`、`versionName 2.1-native`、`minSdk 24`、`targetSdk 34`、label「记事本」、启动 Activity `eu.wenjun.notes.MainActivity`；`apksigner verify` 确认签名有效（debug 证书，与旧壳同证书，可覆盖安装）；dex 里能找到 `MainActivity`。接口侧用原生 UA 实测过：`POST /api/login`（`device:true`）回 80 字符三段令牌，`GET /api/notes?meta=1` 回 4 条、`updatedAt` 是毫秒时间戳、`tags` 是数组，`GET /api/notes/:id` 能取回 1549 字正文。
+本机没有连安卓设备也没有装模拟器，APK 只做了编译和静态校验：`aapt2` 确认包名 `eu.wenjun.notes`、`versionCode 4`、`versionName 2.2-native`、`minSdk 24`、`targetSdk 34`、label「记事本」、启动 Activity `eu.wenjun.notes.MainActivity`；`apksigner verify` 确认签名有效（debug 证书，与旧壳同证书，可覆盖安装）；dex 里能找到 `MainActivity`。接口侧用原生 UA 实测过：`POST /api/login`（`device:true`）回 80 字符三段令牌，`GET /api/notes?meta=1` 回 4 条、`updatedAt` 是毫秒时间戳、`tags` 是数组，`GET /api/notes/:id` 能取回 1549 字正文。
 
 装到手机后重点看四件事：登录后退出重进是否免密、列表 / 详情是否正常加载、编辑 600 毫秒后是否自动保存、分享链接是否复制进剪贴板。
 

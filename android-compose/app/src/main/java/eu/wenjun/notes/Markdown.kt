@@ -120,7 +120,7 @@ fun parseMarkdown(source: String): List<MdBlock> {
 
 private val INLINE = Regex("""\*\*(.+?)\*\*|\*(.+?)\*|`(.+?)`|\[(.+?)]\((.+?)\)|~~(.+?)~~""")
 
-fun inlineText(text: String, base: Color = Ink, accent: Color = Amber): AnnotatedString =
+fun inlineText(text: String, base: Color = Ink, accent: Color = Accent): AnnotatedString =
     buildAnnotatedString {
         var last = 0
         for (match in INLINE.findAll(text)) {
@@ -221,7 +221,7 @@ private fun BlockView(block: MdBlock) {
                 },
                 fontSize = 15.sp,
                 lineHeight = 24.sp,
-                color = if (block.check == true) Muted else Amber,
+                color = if (block.check == true) Muted else Accent,
                 modifier = Modifier.width(22.dp)
             )
             Text(

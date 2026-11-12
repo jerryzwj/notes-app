@@ -144,7 +144,7 @@ fun EditorScreen(vm: NotesViewModel) {
                 text = if (preview) "编辑" else "预览",
                 fontSize = 13.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = Amber,
+                color = Accent,
                 modifier = Modifier
                     .clickable { preview = !preview }
                     .padding(horizontal = 10.dp, vertical = 10.dp)
@@ -203,7 +203,7 @@ fun EditorScreen(vm: NotesViewModel) {
                 onValueChange = { title = it },
                 singleLine = true,
                 textStyle = TextStyle(color = Ink, fontSize = 21.sp, fontWeight = FontWeight.Bold),
-                cursorBrush = SolidColor(Amber),
+                cursorBrush = SolidColor(Accent),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -219,8 +219,8 @@ fun EditorScreen(vm: NotesViewModel) {
                 value = tagsText,
                 onValueChange = { tagsText = it },
                 singleLine = true,
-                textStyle = TextStyle(color = Amber, fontSize = 12.5.sp),
-                cursorBrush = SolidColor(Amber),
+                textStyle = TextStyle(color = Accent, fontSize = 12.5.sp),
+                cursorBrush = SolidColor(Accent),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 6.dp),
@@ -236,7 +236,7 @@ fun EditorScreen(vm: NotesViewModel) {
                 value = body,
                 onValueChange = { body = it },
                 textStyle = TextStyle(color = Ink, fontSize = 15.sp, lineHeight = 24.sp),
-                cursorBrush = SolidColor(Amber),
+                cursorBrush = SolidColor(Accent),
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
