@@ -92,7 +92,8 @@ def solid_icon(size):
 
 
 def foreground(size):
-    return draw_art(size)
+    # 自适应图标是 108dp 画布、系统只显示中间约 72dp，按 0.66 缩一下才和整张图标里的占比一致
+    return draw_art(size, art_scale=0.66)
 
 
 def save(img, path):
