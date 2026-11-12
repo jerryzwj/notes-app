@@ -90,7 +90,7 @@ fun BackupScreen(vm: NotesViewModel) {
                 lineHeight = 18.sp,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Panel2, RoundedCornerShape(8.dp))
+                    .background(Panel2, RoundedCornerShape(14.dp))
                     .padding(horizontal = 12.dp, vertical = 10.dp)
             )
 
@@ -126,7 +126,7 @@ fun BackupScreen(vm: NotesViewModel) {
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .weight(1f)
-                        .background(Panel2, RoundedCornerShape(8.dp))
+                        .background(Panel2, RoundedCornerShape(50.dp))
                         .clickable { vm.saveWebDav(url, user, pass) }
                         .padding(vertical = 13.dp),
                 )
@@ -139,7 +139,7 @@ fun BackupScreen(vm: NotesViewModel) {
                         .weight(1f)
                         .background(
                             if (vm.backupBusy) Panel2 else Accent,
-                            RoundedCornerShape(8.dp)
+                            RoundedCornerShape(50.dp)
                         )
                         .clickable {
                             // 先把手填的配置记住再备份，省得先点保存
@@ -200,7 +200,7 @@ private fun Field(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(46.dp)
-                .background(Panel2, RoundedCornerShape(9.dp)),
+                .background(Panel2, RoundedCornerShape(16.dp)),
             contentAlignment = Alignment.CenterStart
         ) {
             BasicTextField(

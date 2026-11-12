@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -85,7 +86,7 @@ fun ListScreen(vm: NotesViewModel) {
         if (vm.token != null) vm.refresh()
     }
 
-    Column(Modifier.fillMaxSize().background(Panel)) {
+    Column(Modifier.fillMaxSize().background(Bg)) {
         ListHeader(vm)
         SearchBox(vm)
         TabsRow(vm)
@@ -116,21 +117,23 @@ fun ListScreen(vm: NotesViewModel) {
                     modifier = Modifier.align(Alignment.Center)
                 )
             } else {
-                LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
+                LazyColumn(
+                    state = listState,
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(vertical = 4.dp)
+                ) {
                     items(shown, key = { it.id }) { meta ->
                         // 刷新后行位置变化（置顶、新笔记插到最前）时平滑移动，不直接跳
                         Column(Modifier.animateItemPlacement()) {
                             NoteRow(vm, meta)
-                            Line()
                         }
                     }
                 }
             }
         }
 
-        Line()
         Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 10.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text("${shown.size} 条笔记", color = Muted, fontSize = 12.sp)
@@ -211,14 +214,17 @@ private fun ListHeader(vm: NotesViewModel) {
         Spacer(Modifier.width(8.dp))
         Text("记事本", fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = Ink)
         Spacer(Modifier.weight(1f))
-        Box(
+        Row(
             modifier = Modifier
-                .size(34.dp)
-                .background(Accent, RoundedCornerShape(8.dp))
-                .clickable { vm.createNote() },
-            contentAlignment = Alignment.Center
+                .height(34.dp)
+                .background(Accent, RoundedCornerShape(50.dp))
+                .clickable { vm.createNote() }
+                .padding(horizontal = 13.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(Icons.Rounded.Add, contentDescription = "新建", tint = AccentInk, modifier = Modifier.size(20.dp))
+            Icon(Icons.Rounded.Add, contentDescription = "新建", tint = AccentInk, modifier = Modifier.size(18.dp))
+            Spacer(Modifier.width(3.dp))
+            Text("新建", fontSize = 13.sp, fontWeight = FontWeight.Medium, color = AccentInk)
         }
         Box {
             IconButton(onClick = { menu = true }) {
@@ -293,7 +299,7 @@ private fun SearchBox(vm: NotesViewModel) {
             .fillMaxWidth()
             .padding(horizontal = 12.dp, vertical = 4.dp)
             .height(38.dp)
-            .background(Panel2, RoundedCornerShape(8.dp)),
+            .background(Panel2, RoundedCornerShape(19.dp)),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(Modifier.width(10.dp))
@@ -322,24 +328,19 @@ private fun TabsRow(vm: NotesViewModel) {
     ) {
         Tab.entries.forEach { item ->
             val selected = vm.tab == item
-            Column(
+            Box(
                 modifier = Modifier
+                    .padding(horizontal = 3.dp)
+                    .background(if (selected) AccentSoft else Color.Transparent, RoundedCornerShape(50.dp))
                     .clickable { vm.selectTab(item) }
-                    .padding(horizontal = 10.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(horizontal = 12.dp, vertical = 7.dp),
+                contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = item.label,
-                    fontSize = 13.5.sp,
-                    color = if (selected) Ink else Muted,
-                    fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
-                    modifier = Modifier.padding(vertical = 8.dp)
-                )
-                Box(
-                    Modifier
-                        .height(2.dp)
-                        .width(18.dp)
-                        .background(if (selected) Accent else Color.Transparent, RoundedCornerShape(1.dp))
+                    fontSize = 13.sp,
+                    color = if (selected) Accent else Muted,
+                    fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal
                 )
             }
         }
@@ -354,8 +355,10 @@ private fun NoteRow(vm: NotesViewModel, meta: NoteMeta) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(horizontal = 10.dp, vertical = 4.dp)
+            .background(Panel, RoundedCornerShape(14.dp))
             .clickable { vm.open(meta.id) }
-            .padding(start = 16.dp, end = 2.dp, top = 11.dp, bottom = 11.dp),
+            .padding(start = 14.dp, end = 2.dp, top = 11.dp, bottom = 11.dp),
         verticalAlignment = Alignment.Top
     ) {
         Column(Modifier.weight(1f)) {

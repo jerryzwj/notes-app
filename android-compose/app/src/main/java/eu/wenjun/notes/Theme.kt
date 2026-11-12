@@ -51,6 +51,9 @@ val Danger: Color get() = if (Look.dark) DarkDanger else LightDanger
 /** 压在强调色上的文字：浅色主题用白字，深色主题用深墨绿字。 */
 val AccentInk: Color get() = if (Look.dark) Color(0xFF06211A) else Color(0xFFFFFFFF)
 
+/** 强调色的浅底：选中态胶囊、聚焦环用。 */
+val AccentSoft: Color get() = if (Look.dark) Color(0x2E45D6A6) else Color(0x1F0E9E74)
+
 @Composable
 fun NotesTheme(content: @Composable () -> Unit) {
     val colors = if (Look.dark) {

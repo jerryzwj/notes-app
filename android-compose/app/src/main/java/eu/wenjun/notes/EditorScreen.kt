@@ -2,6 +2,7 @@ package eu.wenjun.notes
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -146,8 +147,10 @@ fun EditorScreen(vm: NotesViewModel) {
                 fontWeight = FontWeight.SemiBold,
                 color = Accent,
                 modifier = Modifier
+                    .padding(end = 4.dp)
+                    .background(AccentSoft, RoundedCornerShape(50.dp))
                     .clickable { preview = !preview }
-                    .padding(horizontal = 10.dp, vertical = 10.dp)
+                    .padding(horizontal = 14.dp, vertical = 8.dp)
             )
             Box {
                 IconButton(onClick = { menu = true }) {

@@ -67,7 +67,7 @@ fun LoginScreen(vm: NotesViewModel) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
-                .background(Panel2, RoundedCornerShape(10.dp)),
+                .background(Panel2, RoundedCornerShape(16.dp)),
             contentAlignment = Alignment.CenterStart
         ) {
             BasicTextField(
@@ -98,7 +98,7 @@ fun LoginScreen(vm: NotesViewModel) {
         Button(
             onClick = { vm.login(password) },
             enabled = !vm.loading,
-            shape = RoundedCornerShape(10.dp),
+            shape = RoundedCornerShape(50.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Accent,
                 contentColor = AccentInk,

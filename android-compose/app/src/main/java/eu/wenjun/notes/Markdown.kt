@@ -190,7 +190,7 @@ private fun BlockView(block: MdBlock) {
             color = Ink2,
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Panel2, RoundedCornerShape(8.dp))
+                .background(Panel2, RoundedCornerShape(12.dp))
                 .padding(horizontal = 14.dp, vertical = 12.dp)
         )
 
@@ -207,7 +207,7 @@ private fun BlockView(block: MdBlock) {
                 color = Ink2,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Panel2, RoundedCornerShape(8.dp))
+                    .background(Panel2, RoundedCornerShape(12.dp))
                     .padding(horizontal = 14.dp, vertical = 10.dp)
             )
         }

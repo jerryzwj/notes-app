@@ -92,7 +92,7 @@ private fun ToastHost(vm: NotesViewModel) {
                 fontSize = 12.5.sp,
                 modifier = Modifier
                     .padding(bottom = 64.dp, start = 24.dp, end = 24.dp)
-                    .background(Accent, RoundedCornerShape(8.dp))
+                    .background(Accent, RoundedCornerShape(14.dp))
                     .padding(horizontal = 14.dp, vertical = 9.dp)
             )
         }
