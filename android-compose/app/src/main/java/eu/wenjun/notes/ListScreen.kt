@@ -29,6 +29,8 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.DarkMode
+import androidx.compose.material.icons.rounded.LightMode
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.AlertDialog
@@ -203,7 +205,7 @@ private fun ListHeader(vm: NotesViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 14.dp, end = 6.dp, top = 10.dp, bottom = 6.dp),
+            .padding(start = 14.dp, end = 12.dp, top = 10.dp, bottom = 6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
@@ -226,12 +228,36 @@ private fun ListHeader(vm: NotesViewModel) {
             Spacer(Modifier.width(3.dp))
             Text("新建", fontSize = 13.sp, fontWeight = FontWeight.Medium, color = AccentInk)
         }
+        Spacer(Modifier.width(8.dp))
+        Box(
+            modifier = Modifier
+                .size(34.dp)
+                .background(Panel2, RoundedCornerShape(50.dp))
+                .clickable { vm.toggleLook() },
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                if (vm.darkLook) Icons.Rounded.LightMode else Icons.Rounded.DarkMode,
+                contentDescription = "切换外观",
+                tint = Ink2,
+                modifier = Modifier.size(18.dp)
+            )
+        }
+        Spacer(Modifier.width(8.dp))
         Box {
-            IconButton(
-                onClick = { menu = true },
-                modifier = Modifier.size(34.dp).background(Panel2, RoundedCornerShape(50.dp))
+            Box(
+                modifier = Modifier
+                    .size(34.dp)
+                    .background(Panel2, RoundedCornerShape(50.dp))
+                    .clickable { menu = true },
+                contentAlignment = Alignment.Center
             ) {
-                Icon(Icons.Rounded.MoreVert, contentDescription = "更多", tint = Ink2)
+                Icon(
+                    Icons.Rounded.MoreVert,
+                    contentDescription = "更多",
+                    tint = Ink2,
+                    modifier = Modifier.size(18.dp)
+                )
             }
             DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
                 DropdownMenuItem(text = { Text("刷新", color = Ink) }, onClick = {
@@ -272,18 +298,6 @@ private fun ListHeader(vm: NotesViewModel) {
                     onClick = {
                         menu = false
                         vm.checkUpdate()
-                    }
-                )
-                DropdownMenuItem(
-                    text = {
-                        Text(
-                            if (vm.darkLook) "外观：深色（点一下切浅色）" else "外观：浅色（点一下切深色）",
-                            color = Ink
-                        )
-                    },
-                    onClick = {
-                        menu = false
-                        vm.toggleLook()
                     }
                 )
                 DropdownMenuItem(text = { Text("退出登录", color = Danger) }, onClick = {

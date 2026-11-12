@@ -1,5 +1,6 @@
 package eu.wenjun.notes
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -43,6 +44,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun BackupScreen(vm: NotesViewModel) {
+    BackHandler { vm.closeBackup() }
     val saved = vm.webDav
     var url by remember(saved) { mutableStateOf(saved?.url ?: "") }
     var user by remember(saved) { mutableStateOf(saved?.user ?: "") }
