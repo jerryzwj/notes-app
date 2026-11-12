@@ -487,9 +487,9 @@
     bar.innerHTML = tags
       .map(
         ([t, c]) =>
-          `<button type="button" class="tag${state.tag === t ? ' active' : ''}" data-tag="${escapeHTML(t)}">${escapeHTML(
+          `<button type="button" class="tag${state.tag === t ? ' active' : ''}" data-tag="${escapeHTML(t)}"><i class="tag-mark">+</i>${escapeHTML(
             t
-          )} <span>${c}</span></button>`
+          )}<span>${c}</span></button>`
       )
       .join('');
   }
