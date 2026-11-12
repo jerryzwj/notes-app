@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -138,15 +139,26 @@ fun EditorScreen(vm: NotesViewModel) {
 
     Column(Modifier.fillMaxSize().background(Bg)) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(start = 2.dp, end = 4.dp, top = 6.dp, bottom = 2.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 12.dp, end = 12.dp, top = 8.dp, bottom = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(
-                onClick = { close() },
-                modifier = Modifier.size(34.dp).background(Panel2, RoundedCornerShape(50.dp))
+            Box(
+                modifier = Modifier
+                    .size(34.dp)
+                    .background(Panel2, RoundedCornerShape(50.dp))
+                    .clickable { close() },
+                contentAlignment = Alignment.Center
             ) {
-                Icon(Icons.Rounded.ArrowBack, contentDescription = "返回", tint = Ink2)
+                Icon(
+                    Icons.Rounded.ArrowBack,
+                    contentDescription = "返回",
+                    tint = Ink2,
+                    modifier = Modifier.size(18.dp)
+                )
             }
+            Spacer(Modifier.width(10.dp))
             Text(
                 text = when {
                     vm.isDraft -> "新笔记"
@@ -163,17 +175,25 @@ fun EditorScreen(vm: NotesViewModel) {
                 fontWeight = FontWeight.SemiBold,
                 color = Accent,
                 modifier = Modifier
-                    .padding(end = 4.dp)
                     .background(AccentSoft, RoundedCornerShape(50.dp))
                     .clickable { preview = !preview }
                     .padding(horizontal = 14.dp, vertical = 8.dp)
             )
+            Spacer(Modifier.width(8.dp))
             Box {
-                IconButton(
-                    onClick = { menu = true },
-                    modifier = Modifier.size(34.dp).background(Panel2, RoundedCornerShape(50.dp))
+                Box(
+                    modifier = Modifier
+                        .size(34.dp)
+                        .background(Panel2, RoundedCornerShape(50.dp))
+                        .clickable { menu = true },
+                    contentAlignment = Alignment.Center
                 ) {
-                    Icon(Icons.Rounded.MoreVert, contentDescription = "更多", tint = Ink2)
+                    Icon(
+                        Icons.Rounded.MoreVert,
+                        contentDescription = "更多",
+                        tint = Ink2,
+                        modifier = Modifier.size(18.dp)
+                    )
                 }
                 DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
                     DropdownMenuItem(text = { Text(if (pinned) "取消置顶" else "置顶", color = Ink) }, onClick = {
