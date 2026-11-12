@@ -1,0 +1,16 @@
+name = "notes"
+main = "src/index.js"
+compatibility_date = "2026-11-01"
+
+# 自定义域名（需要 wenjun.eu.org 这个 zone 在同一个 Cloudflare 账号里）
+routes = [
+  { pattern = "note.wenjun.eu.org", custom_domain = true }
+]
+
+# 前后端同一个 Worker：/api/* 走后端，其余路径直接返回 public/ 里的静态文件
+[assets]
+directory = "./public"
+binding = "ASSETS"
+
+[vars]
+UPSTASH_URL = "https://finer-jackal-246338.upstash.io"

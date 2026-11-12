@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 冷启动窗口背景：深色底 + 居中品牌标识，避免点开 App 先闪一下空白 -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/bg" />
+    <item
+        android:width="80dp"
+        android:height="80dp"
+        android:gravity="center"
+        android:drawable="@drawable/ic_mark" />
+</layer-list>

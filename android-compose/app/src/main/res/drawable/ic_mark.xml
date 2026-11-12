@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 品牌标识：琥珀圆角底 + 白色纸页（右上折角）+ 石墨内容线，和网页 mark.svg 同款 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="28dp"
+    android:height="28dp"
+    android:viewportWidth="28"
+    android:viewportHeight="28">
+
+    <path
+        android:fillColor="#E0A94A"
+        android:pathData="M7,0h14a7,7 0 0 1 7,7v14a7,7 0 0 1 -7,7h-14a7,7 0 0 1 -7,-7v-14a7,7 0 0 1 7,-7z" />
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M9.6,6.4h6.6l3.6,3.8v10.2a1.4,1.4 0 0 1 -1.4,1.4h-8.8a1.4,1.4 0 0 1 -1.4,-1.4v-12.6a1.4,1.4 0 0 1 1.4,-1.4z" />
+
+    <path
+        android:fillColor="#D4D4DC"
+        android:pathData="M16.2,6.4l3.6,3.8h-3.6z" />
+
+    <path
+        android:strokeColor="#26262A"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:pathData="M10.3,11.9h5.8" />
+    <path
+        android:strokeColor="#26262A"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:pathData="M10.3,15.0h5.8" />
+    <path
+        android:strokeColor="#26262A"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:pathData="M10.3,18.1h3.2" />
+</vector>

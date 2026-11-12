@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#161618" />
+  <title>分享的笔记</title>
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="icon" href="/icon-192.png" />
+</head>
+<body>
+  <main class="share-page">
+    <div class="share-head">
+      <img class="brand-mark" src="/mark.svg" alt="" width="24" height="24" />
+      <span>记事本 · 只读分享</span>
+    </div>
+    <div id="content">
+      <p class="share-state">正在加载…</p>
+    </div>
+  </main>
+
+  <script src="/markdown.js"></script>
+  <script>
+    (function () {
+      document.documentElement.dataset.theme = 'dark';
+      var meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.content = '#161618';
+
+      var slug = (location.pathname.match(/\/s\/([a-z0-9]{6,40})/) || [])[1] || '';
+      var box = document.getElementById('content');
+
+      function esc(s) {
+        return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+
+      function fmt(ts) {
+        if (!ts) return '';
+        var d = new Date(ts);
+        var p = function (n) { return String(n).padStart(2, '0'); };
+        return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+      }
+
+      function state(text) {
+        box.innerHTML = '<p class="share-state">' + esc(text) + '</p>';
+      }
+
+      if (!slug) {
+        state('链接不完整，请向分享者索取完整链接');
+        return;
+      }
+
+      fetch('/api/share/' + slug, { cache: 'no-store' })
+        .then(function (res) {
+          if (!res.ok) {
+            return res.json().then(function (body) {
+              throw new Error(body && body.error ? body.error : '打不开这条分享');
+            });
+          }
+          return res.json();
+        })
+        .then(function (data) {
+          document.title = (data.title || '分享的笔记') + ' · 分享';
+          var tags = '';
+          if (data.tags && data.tags.length) {
+            tags = data.tags.map(function (t) { return '<span>#' + esc(t) + '</span>'; }).join('');
+          }
+          box.innerHTML =
+            '<h1 class="share-title">' + esc(data.title || '无标题') + '</h1>' +
+            '<div class="share-meta"><span>更新于 ' + fmt(data.updatedAt) + '</span>' +
+            (data.tags && data.tags.length ? '<span>' + data.tags.length + ' 个标签</span>' : '') +
+            '<span>只读</span></div>' +
+            (tags ? '<div class="share-tags">' + tags + '</div>' : '') +
+            '<article class="share-body">' +
+            (window.renderMarkdown ? window.renderMarkdown(data.body || '') : esc(data.body || '')) +
+            '</article>' +
+            '<p class="share-state small">由记事本生成 · 内容随作者更新</p>';
+        })
+        .catch(function (err) {
+          state(err && err.message ? err.message : '打不开这条分享');
+        });
+    })();
+  </script>
+</body>
+</html>

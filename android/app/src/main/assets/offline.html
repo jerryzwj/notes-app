@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>暂时离线</title>
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    background: #f6f1e6;
+    color: #2a2620;
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    text-align: center;
+    padding: 24px;
+  }
+  .mark {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 18px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: #b0502a;
+    color: #fff7ee;
+    font-family: serif;
+    font-size: 26px;
+  }
+  h1 {
+    font-size: 19px;
+    font-weight: 600;
+    margin: 0 0 8px;
+  }
+  p {
+    font-size: 14px;
+    color: #8c8271;
+    margin: 0 0 20px;
+    line-height: 1.7;
+  }
+  button {
+    height: 42px;
+    padding: 0 22px;
+    border: 0;
+    border-radius: 10px;
+    background: #b0502a;
+    color: #fff8f0;
+    font-size: 15px;
+  }
+</style>
+</head>
+<body>
+  <div>
+    <div class="mark">记</div>
+    <h1>网络不可用</h1>
+    <p>记事本需要联网同步。<br />恢复网络后重试，本地未同步的改动不会丢失。</p>
+    <button onclick="location.replace('https://note.wenjun.eu.org/')">重试</button>
+  </div>
+</body>
+</html>

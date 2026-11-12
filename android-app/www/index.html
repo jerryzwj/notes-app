@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>记事本</title>
+  <meta name="description" content="个人记事本 · Cloudflare + Upstash" />
+  <meta name="theme-color" content="#161618" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="icon" href="/icon-192.png" />
+  <link rel="apple-touch-icon" href="/icon-192.png" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="记事本" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="login" id="login" hidden>
+    <form class="login-card" id="loginForm" autocomplete="on" novalidate>
+      <span class="login-mark">记</span>
+      <h1>记事本</h1>
+      <p class="login-sub">输入访问密码后进入</p>
+      <input id="password" name="password" type="password" autocomplete="current-password" placeholder="访问密码" autofocus />
+      <button type="submit" id="loginBtn">进入</button>
+      <p class="login-hint">登录一次后 180 天内免密码</p>
+      <p class="login-error" id="loginError" hidden></p>
+    </form>
+  </div>
+
+  <div class="app" id="app" hidden>
+    <header class="topbar">
+      <div class="brand">
+        <img class="brand-mark" src="/mark.svg" alt="" width="28" height="28" />
+        <span class="brand-name">记事本</span>
+      </div>
+      <div class="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M16.5 16.5 21 21"></path></svg>
+        <input id="search" type="search" placeholder="搜索标题、正文、标签…" autocomplete="off" enterkeyhint="search" />
+        <button class="search-clear" id="searchClear" type="button" aria-label="清空搜索" hidden>×</button>
+      </div>
+      <div class="top-actions">
+        <span class="sync" id="sync" data-state="idle">已保存</span>
+        <button id="newBtn" class="btn primary" type="button" title="新建笔记">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+          <span>新建</span>
+        </button>
+        <button id="themeBtn" class="icon-btn" type="button" title="切换主题">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"></path></svg>
+        </button>
+        <button id="moreBtn" class="icon-btn" type="button" title="更多" aria-haspopup="menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.7"></circle><circle cx="12" cy="12" r="1.7"></circle><circle cx="19" cy="12" r="1.7"></circle></svg>
+        </button>
+        <div class="more-menu" id="moreMenu" role="menu" hidden>
+          <button type="button" id="importBtn" role="menuitem">导入备份</button>
+          <button type="button" id="exportBtn" role="menuitem">导出全部（JSON）</button>
+          <button type="button" id="lockBtn" role="menuitem" hidden>指纹锁</button>
+          <button type="button" id="logoutBtn" class="danger" role="menuitem">退出登录</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar">
+        <nav class="views" id="views">
+          <button class="view active" type="button" data-view="all">全部<span id="countAll">0</span></button>
+          <button class="view" type="button" data-view="pinned">置顶</button>
+          <button class="view" type="button" data-view="trash">回收站<span id="countTrash" hidden>0</span></button>
+        </nav>
+
+        <div class="tagbar" id="tagbar"></div>
+
+        <div class="list-wrap">
+          <ul class="list" id="list"></ul>
+          <div class="list-empty" id="listEmpty" hidden>
+            <p>这里还没有笔记</p>
+            <p class="hint">点右上角「新建」开始</p>
+          </div>
+        </div>
+
+        <footer class="side-foot">
+          <span class="foot-info" id="footInfo">0 条笔记</span>
+        </footer>
+      </aside>
+
+      <section class="pane" id="pane">
+        <div class="pane-empty" id="paneEmpty">
+          <svg class="pane-empty-mark" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6.6 3.4h7.1l3.7 3.7v13.5H6.6z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" />
+            <path d="M13.7 3.4v3.7h3.7" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" />
+            <path d="M9.2 11.3h5.6M9.2 14.3h5.6M9.2 17.1h3.2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+          </svg>
+          <p>选择一条笔记，或新建一条</p>
+          <p class="hint">支持 Markdown，自动保存</p>
+        </div>
+
+        <div class="editor" id="editor" hidden>
+          <div class="editor-bar">
+            <button class="icon-btn back" id="backBtn" type="button" title="返回列表">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"></path></svg>
+            </button>
+            <div class="grow"></div>
+            <button class="chip-btn" id="pinBtn" type="button">置顶</button>
+            <button class="chip-btn" id="shareBtn" type="button">分享</button>
+            <button class="chip-btn" id="exportNoteBtn" type="button">导出</button>
+            <button class="chip-btn" id="modeBtn" type="button">预览</button>
+            <button class="chip-btn danger" id="purgeBtn" type="button" hidden>彻底删除</button>
+            <button class="chip-btn danger" id="trashBtn" type="button">删除</button>
+          </div>
+
+          <div class="editor-inner">
+            <input id="noteTitle" class="note-title" placeholder="标题" maxlength="200" />
+            <input id="noteTags" class="note-tags" placeholder="标签，用逗号分隔" />
+            <div class="note-meta" id="noteMeta"></div>
+            <div class="format-bar" id="formatBar" hidden>
+              <button type="button" class="fmt" data-md="bold" title="加粗（Ctrl+B）" aria-label="加粗"><span class="fmt-letter b">B</span></button>
+              <button type="button" class="fmt" data-md="italic" title="斜体（Ctrl+I）" aria-label="斜体"><span class="fmt-letter i">I</span></button>
+              <button type="button" class="fmt" data-md="heading" title="标题" aria-label="标题"><span class="fmt-letter">H<sub>2</sub></span></button>
+              <span class="fmt-sep" aria-hidden="true"></span>
+              <button type="button" class="fmt" data-md="list" title="无序列表" aria-label="无序列表">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"></path><circle cx="5" cy="6" r="1.4"></circle><circle cx="5" cy="12" r="1.4"></circle><circle cx="5" cy="18" r="1.4"></circle></svg>
+              </button>
+              <button type="button" class="fmt" data-md="todo" title="待办清单" aria-label="待办清单">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="6" width="12" height="12" rx="3.2"></rect><path d="M7 11.8l2.8 2.9 4.6-5.8"></path></svg>
+              </button>
+              <button type="button" class="fmt" data-md="code" title="代码" aria-label="代码">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7l-4 5 4 5M15 7l4 5-4 5"></path></svg>
+              </button>
+              <button type="button" class="fmt" data-md="quote" title="引用" aria-label="引用">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6v13"></path><path d="M9.5 8h10M9.5 12.5h10M9.5 17h6"></path></svg>
+              </button>
+              <span class="fmt-sep" aria-hidden="true"></span>
+              <button type="button" class="fmt" data-md="link" title="插入链接" aria-label="插入链接">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.2 13.8a4.2 4.2 0 0 1 0-5.9l2.3-2.3a4.2 4.2 0 0 1 5.9 5.9l-1.2 1.2"></path><path d="M13.8 10.2a4.2 4.2 0 0 1 0 5.9l-2.3 2.3a4.2 4.2 0 0 1-5.9-5.9l1.2-1.2"></path></svg>
+              </button>
+              <button type="button" class="fmt" data-md="rule" title="分割线" aria-label="分割线">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 12h17"></path><path d="M9 6.5h6M9 17.5h6" opacity=".35"></path></svg>
+              </button>
+              <button type="button" class="fmt" id="pasteBtn" data-act="paste" title="粘贴剪贴板内容" aria-label="粘贴">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7.5" y="4.5" width="9" height="15" rx="2.2"></rect><path d="M10.2 4.5v-1.2h3.6v1.2"></path><path d="M10 12h4M10 15.5h3"></path></svg>
+              </button>
+            </div>
+            <div class="note-body-wrap">
+              <textarea id="noteBody" class="note-body" placeholder="开始记录…" spellcheck="false"></textarea>
+              <div class="note-preview" id="preview" hidden></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <input type="file" id="importFile" accept=".json,application/json" hidden />
+  <div class="modal" id="shareModal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+      <h2 id="shareTitle">分享链接</h2>
+      <p class="modal-sub">拿到这条链接的人无需密码，只能只读查看这条笔记</p>
+      <input class="share-url" id="shareUrl" type="text" readonly />
+      <div class="modal-actions">
+        <button type="button" id="shareCopy">复制链接</button>
+        <button type="button" id="shareStop" class="danger">取消分享</button>
+        <button type="button" id="shareClose" class="primary">完成</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="/native.js" defer></script>
+  <script src="/markdown.js" defer></script>
+  <script src="/app.js" defer></script>
+</body>
+</html>
