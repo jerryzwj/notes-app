@@ -381,7 +381,7 @@ private fun NoteRow(vm: NotesViewModel, meta: NoteMeta) {
                     fontSize = 13.sp,
                     lineHeight = 19.sp,
                     color = Muted,
-                    maxLines = 2,
+                    maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.padding(top = 3.dp)
                 )
