@@ -169,16 +169,21 @@ fun EditorScreen(vm: NotesViewModel) {
                 color = Muted
             )
             Spacer(Modifier.weight(1f))
-            Text(
-                text = if (preview) "编辑" else "预览",
-                fontSize = 13.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Accent,
+            Box(
                 modifier = Modifier
+                    .height(34.dp)
                     .background(AccentSoft, RoundedCornerShape(50.dp))
                     .clickable { preview = !preview }
-                    .padding(horizontal = 14.dp, vertical = 8.dp)
-            )
+                    .padding(horizontal = 16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = if (preview) "编辑" else "预览",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Accent
+                )
+            }
             Spacer(Modifier.width(8.dp))
             Box {
                 Box(
