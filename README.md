@@ -220,7 +220,9 @@ python scripts\maintenance.py clear --yes # 清空（慎用）
 
 WebView 壳的界面观感一直不满意，所以安卓端改成纯原生重写：后端还是同一个 Cloudflare Worker，接口和数据一个字没动，App 只是换了一个直连 HTTP API 的客户端。
 
-- 工程：`android-compose/`，包名 `eu.wenjun.notes`（与旧壳一致，可直接覆盖安装），`versionCode 4` / `versionName 2.2-native`
+- 工程：`android-compose/`，包名 `eu.wenjun.notes`（与旧壳一致，可直接覆盖安装），`versionCode 8` / `versionName 2.6-native`
+- 界面：浅色翠绿主题 +「外观：浅色/深色」开关，大圆角（卡片 14dp、输入框 16dp）、胶囊按钮（新建/预览/顶栏图标按钮统一 34dp 圆形或 999px 胶囊）、一行摘要卡片列表、标签页选中态浅绿胶囊
+- 预览交互：预览态点正文任意位置会切回编辑，并把光标落在点的那个字（`parseBlocks` 记录每块源码偏移 + `TextLayoutResult.getOffsetForPosition` 换算，长按选区复制不受影响）
 - 技术栈：Kotlin 1.9.22 + Compose Compiler 1.5.8 + AGP 8.2.1 / Gradle 8.2.1 + Compose BOM 2024.02.00 + Material3 + OkHttp 4.12 + org.json，`minSdk 24` / `targetSdk 34` / `compileSdk 34`
 - 没有 Retrofit、Moshi、Navigation：一个 OkHttp 封装 + 一个 `AndroidViewModel` + `openNote` 状态切换列表和详情，依赖少、编译快
 - 主题直接继承 `android:Theme.Material.NoActionBar`，不建 `values-night` 变体（避免 `ResourceCycle` 自继承问题）；输入框统一用 `BasicTextField`（material3 1.2.0 的 `OutlinedTextField` 没有 `contentPadding`）
@@ -303,7 +305,7 @@ App 查的是 `https://api.github.com/repos/jerryzwj/notes-app/releases/latest`�
 
 ### 真机验证情况
 
-本机没有连安卓设备也没有装模拟器，APK 只做了编译和静态校验：`aapt2` 确认包名 `eu.wenjun.notes`、`versionCode 4`、`versionName 2.2-native`、`minSdk 24`、`targetSdk 34`、label「记事本」、启动 Activity `eu.wenjun.notes.MainActivity`；`apksigner verify` 确认签名有效（debug 证书，与旧壳同证书，可覆盖安装）；dex 里能找到 `MainActivity`。接口侧用原生 UA 实测过：`POST /api/login`（`device:true`）回 80 字符三段令牌，`GET /api/notes?meta=1` 回 4 条、`updatedAt` 是毫秒时间戳、`tags` 是数组，`GET /api/notes/:id` 能取回 1549 字正文。
+本机没有连安卓设备也没有装模拟器，APK 只做了编译和静态校验：`aapt2` 确认包名 `eu.wenjun.notes`、`versionCode 8`、`versionName 2.6-native`、`minSdk 24`、`targetSdk 34`、label「记事本」、启动 Activity `eu.wenjun.notes.MainActivity`；`apksigner verify` 确认签名有效（debug 证书，与旧壳同证书，可覆盖安装）；dex 里能找到 `MainActivity`。接口侧用原生 UA 实测过：`POST /api/login`（`device:true`）回 80 字符三段令牌，`GET /api/notes?meta=1` 回 4 条、`updatedAt` 是毫秒时间戳、`tags` 是数组，`GET /api/notes/:id` 能取回 1549 字正文。
 
 装到手机后重点看四件事：登录后退出重进是否免密、列表 / 详情是否正常加载、编辑 600 毫秒后是否自动保存、分享链接是否复制进剪贴板。
 

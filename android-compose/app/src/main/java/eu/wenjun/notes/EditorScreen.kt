@@ -48,6 +48,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalClipboardManager
@@ -104,6 +106,9 @@ fun EditorScreen(vm: NotesViewModel) {
         mutableStateOf(note.title.isNotBlank() || note.body.isNotBlank())
     }
     var menu by remember { mutableStateOf(false) }
+    // 预览里点了正文：记下目标光标位，切回编辑后请求焦点
+    var caretRequest by remember(note.id) { mutableStateOf(-1) }
+    val bodyFocus = remember { FocusRequester() }
 
     val clipboard = LocalClipboardManager.current
     val pinned = note.pinned
@@ -113,9 +118,17 @@ fun EditorScreen(vm: NotesViewModel) {
     fun close() = vm.saveAndClose(title, body.text, parseTags(tagsText), pinned)
     BackHandler { close() }
 
+    // 从预览点回编辑时，等输入框重新出现再抢焦点，光标就停在点的位置
+    LaunchedEffect(caretRequest, preview) {
+        if (caretRequest >= 0 && !preview) {
+            delay(80)
+            runCatching { bodyFocus.requestFocus() }
+            caretRequest = -1
+        }
+    }
+
     // 编辑后 600ms 落库，连续输入只保存最后一次
-    LaunchedEffect(note.id) {
-        snapshotFlow { Draft(title, tagsText, body.text) }
+    LaunchedEffect(note.id) {        snapshotFlow { Draft(title, tagsText, body.text) }
             .drop(1)
             .collectLatest { draft ->
                 delay(600)
@@ -202,7 +215,12 @@ fun EditorScreen(vm: NotesViewModel) {
                         .padding(horizontal = 16.dp, vertical = 12.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    MarkdownView(body.text)
+                    MarkdownView(body.text, onTapPosition = { pos ->
+                        val p = pos.coerceIn(0, body.text.length)
+                        body = TextFieldValue(body.text, TextRange(p))
+                        preview = false
+                        caretRequest = p
+                    })
                     Spacer(Modifier.height(24.dp))
                 }
             }
@@ -249,6 +267,7 @@ fun EditorScreen(vm: NotesViewModel) {
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
+                    .focusRequester(bodyFocus)
                     .verticalScroll(rememberScrollState())
                     .padding(horizontal = 16.dp, vertical = 12.dp),
                 decorationBox = { inner ->
