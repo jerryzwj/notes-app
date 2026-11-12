@@ -2,7 +2,8 @@
 
 个人用的笔记应用：一个 Cloudflare Worker 同时提供网页和 API，数据存在 Upstash Redis。
 
-- 线上地址：<https://note.wenjun.eu.org>
+- 线上地址：<https://note.wenjun.eu.org>（备用域名 <https://note.zhangwenjun.eu.org>，同一个 Worker）
+- 源码与发版：<https://github.com/jerryzwj/notes-app>（公开仓库，APK 走 Release 附件）
 - 访问密码：只放在本地 `.dev.vars` 的 `APP_PASSWORD` 里，不进仓库（改密码见下方「密钥」）
 - 安卓：网页本身是 PWA，可直接安装；安卓客户端已改为 Kotlin + Jetpack Compose 原生版（`android-compose/`），旧的 Capacitor 壳保留但不再更新
 
@@ -290,7 +291,7 @@ App 查的是 `https://api.github.com/repos/jerryzwj/notes-app/releases/latest`�
 3. 在 GitHub 仓库建一个 tag 为 `v2.2` 的 Release，正文写更新说明，把 APK 作为资产上传（文件名以 `.apk` 结尾）
 4. App 下次检查更新时，会拿 `v2.2` 的 `2.2` 跟本地 `2.2-native` 比数字段；本地旧就会弹对话框，「下载更新」直接打开资产地址
 
-仓库名存在 `notes-update` 偏好文件里（`repo` 键，默认 `jerryzwj/notes-app`），换仓库不用改代码。**注：截至 2.1 发版，`jerryzwj/notes-app` 在 GitHub 上还是 404（仓库没建或私有），所以现在点「检查更新」只会提示「还没有发布记录」**。
+仓库名存在 `notes-update` 偏好文件里（`repo` 键，默认 `jerryzwj/notes-app`），换仓库不用改代码。2.1 已经按这个流程发过一次：<https://github.com/jerryzwj/notes-app/releases/tag/v2.1>（资产 `notes-native-2.1.apk`，1,597,105 字节）。本地 `2.1-native` 与 tag `v2.1` 的数字段相同，所以现在点「检查更新」会回「已是最新版本」；等以后发 `v2.2` 才会弹提示。
 
 ### 与网页版还差什么（v1 未做）
 
