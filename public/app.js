@@ -1,4 +1,4 @@
-/* 记事本 · 前端 */
+/* 简·笔记本 · 前端 */
 (() => {
   'use strict';
 
@@ -1021,7 +1021,7 @@
       ${info ? `<div class="meta">${escapeHTML(info)}</div>` : ''}
       <div class="content">${content}</div>
     </article>
-    <div class="foot">记事本 · ${escapeHTML(
+    <div class="foot">简·笔记本 · ${escapeHTML(
       new Date().toLocaleString('zh-CN', { hour12: false })
     )}</div>
   </div>
@@ -1520,7 +1520,7 @@
     // 开了指纹锁就先解锁；取消的话退回密码登录
     if (Native.native && localStorage.getItem(KEY.lock) === '1') {
       const ok = Native.bio.authenticate
-        ? await Native.bio.authenticate('解锁记事本', '用指纹或锁屏密码继续')
+        ? await Native.bio.authenticate('解锁简·笔记本', '用指纹或锁屏密码继续')
         : false;
       if (!ok) {
         showLogin('指纹解锁已取消，输入密码也能进入');

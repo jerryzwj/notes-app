@@ -1,7 +1,7 @@
 {
-  "name": "记事本",
-  "short_name": "记事本",
-  "description": "个人记事本 · 支持 Markdown、标签、离线",
+  "name": "简·笔记本",
+  "short_name": "简·笔记本",
+  "description": "简·笔记本 · 支持 Markdown、标签、离线",
   "lang": "zh-CN",
   "start_url": "/",
   "scope": "/",

@@ -53,7 +53,7 @@ fun LoginScreen(vm: NotesViewModel) {
             modifier = Modifier.size(64.dp)
         )
         Spacer(Modifier.height(18.dp))
-        Text("记事本", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Ink)
+        Text("简·笔记本", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Ink)
         Text(
             "私人笔记 · 云端同步",
             fontSize = 13.sp,

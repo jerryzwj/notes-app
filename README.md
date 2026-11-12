@@ -1,4 +1,4 @@
-# 记事本
+# 简·笔记本
 
 个人用的笔记应用：一个 Cloudflare Worker 同时提供网页和 API，数据存在 Upstash Redis。
 

@@ -13,7 +13,7 @@
   <main class="share-page">
     <div class="share-head">
       <img class="brand-mark" src="/mark.svg" alt="" width="24" height="24" />
-      <span>记事本 · 只读分享</span>
+      <span>简·笔记本 · 只读分享</span>
     </div>
     <div id="content">
       <p class="share-state">正在加载…</p>
@@ -74,7 +74,7 @@
             '<article class="share-body">' +
             (window.renderMarkdown ? window.renderMarkdown(data.body || '') : esc(data.body || '')) +
             '</article>' +
-            '<p class="share-state small">由记事本生成 · 内容随作者更新</p>';
+            '<p class="share-state small">由简·笔记本生成 · 内容随作者更新</p>';
         })
         .catch(function (err) {
           state(err && err.message ? err.message : '打不开这条分享');

@@ -214,7 +214,7 @@ private fun ListHeader(vm: NotesViewModel) {
             modifier = Modifier.size(24.dp)
         )
         Spacer(Modifier.width(8.dp))
-        Text("记事本", fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = Ink)
+        Text("简·笔记本", fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = Ink)
         Spacer(Modifier.weight(1f))
         Row(
             modifier = Modifier
