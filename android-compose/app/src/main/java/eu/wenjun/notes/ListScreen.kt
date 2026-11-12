@@ -227,7 +227,10 @@ private fun ListHeader(vm: NotesViewModel) {
             Text("新建", fontSize = 13.sp, fontWeight = FontWeight.Medium, color = AccentInk)
         }
         Box {
-            IconButton(onClick = { menu = true }) {
+            IconButton(
+                onClick = { menu = true },
+                modifier = Modifier.size(34.dp).background(Panel2, RoundedCornerShape(50.dp))
+            ) {
                 Icon(Icons.Rounded.MoreVert, contentDescription = "更多", tint = Ink2)
             }
             DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {

@@ -128,7 +128,10 @@ fun EditorScreen(vm: NotesViewModel) {
             modifier = Modifier.fillMaxWidth().padding(start = 2.dp, end = 4.dp, top = 6.dp, bottom = 2.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { close() }) {
+            IconButton(
+                onClick = { close() },
+                modifier = Modifier.size(34.dp).background(Panel2, RoundedCornerShape(50.dp))
+            ) {
                 Icon(Icons.Rounded.ArrowBack, contentDescription = "返回", tint = Ink2)
             }
             Text(
@@ -153,7 +156,10 @@ fun EditorScreen(vm: NotesViewModel) {
                     .padding(horizontal = 14.dp, vertical = 8.dp)
             )
             Box {
-                IconButton(onClick = { menu = true }) {
+                IconButton(
+                    onClick = { menu = true },
+                    modifier = Modifier.size(34.dp).background(Panel2, RoundedCornerShape(50.dp))
+                ) {
                     Icon(Icons.Rounded.MoreVert, contentDescription = "更多", tint = Ink2)
                 }
                 DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
