@@ -525,18 +525,20 @@ a:focus-visible {
   align-items: center;
   gap: 5px;
   height: 28px;
-  padding: 0 9px;
-  border-radius: 16px;
-  color: var(--muted);
+  padding: 0 11px;
+  border-radius: 999px;
+  color: var(--ink-2);
   font-size: 12.5px;
+  font-weight: 500;
+  background: var(--panel-2);
   border: 1px solid transparent;
   letter-spacing: 0;
   transition: color 0.15s var(--ease), background 0.15s var(--ease);
 }
 
 .view:hover {
-  color: var(--ink-2);
-  background: var(--line-soft);
+  color: var(--accent);
+  background: var(--accent-soft);
 }
 
 .view span {
@@ -546,14 +548,14 @@ a:focus-visible {
 }
 
 .view.active {
-  color: var(--ink);
-  background: var(--panel-2);
+  color: var(--accent-ink);
+  background: var(--accent);
   border-color: transparent;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .view.active span {
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 
 .tagbar {
@@ -637,9 +639,9 @@ a:focus-visible {
 }
 
 .item.active {
-  background: var(--panel);
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px var(--accent-soft);
+  background: var(--accent-soft);
+  border-color: transparent;
+  box-shadow: none;
 }
 
 .item.dragging {
@@ -685,7 +687,7 @@ a:focus-visible {
   font-size: 12.5px;
   line-height: 1.5;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -806,29 +808,31 @@ a:focus-visible {
 }
 
 .chip-btn {
-  height: 28px;
-  padding: 0 11px;
+  height: 30px;
+  padding: 0 14px;
   border-radius: 999px;
   border: 1px solid transparent;
   color: var(--ink-2);
   font-size: 12.5px;
-  background: transparent;
+  font-weight: 500;
+  background: var(--panel-2);
   letter-spacing: 0;
   transition: color 0.15s var(--ease), background 0.15s var(--ease);
 }
 
 .chip-btn:hover {
-  background: var(--panel-2);
-  color: var(--ink);
+  background: var(--accent-soft);
+  color: var(--accent);
 }
 
 .chip-btn.on {
-  color: var(--accent);
-  background: var(--accent-soft);
+  color: var(--accent-ink);
+  background: var(--accent);
 }
 
 .chip-btn.danger {
   color: var(--danger);
+  background: rgba(192, 57, 43, 0.12);
 }
 
 .chip-btn.danger:hover {
